@@ -2,10 +2,13 @@
 import { useEffect, useState } from "react";
 import mockData from "../mock/balloons.json";
 
+// Custom hook to fetch balloon data from the API
 export function useBalloonData() {
   const [data, setData] = useState([]);
 
+  // Fetch data on mount
   useEffect(() => {
+    // Use mock data in development mode
     if (import.meta.env.DEV) {
       console.log("Using mock balloon data");
       setData(mockData);
