@@ -33,13 +33,16 @@ module Windy
 
 
     def self.request(lat:, lon:, parameters: DEFAULT_PARAMETERS, model: DEFAULT_MODEL, levels: DEFAULT_LEVELS)
+      windy_key = ENV.fetch("WINDY_API_KEY", nil)
+      raise "Windy API key not configured" if windy_key.nil? || windy_key.empty?
+      
       body = {
         lat: lat,
         lon: lon,
         model: model,
         parameters: parameters,
         levels: levels,
-        key: ENV.fetch("WINDY_API_KEY", nil)
+        key: windy_key
       }
 
       http = Net::HTTP.new(ENDPOINT.host, ENDPOINT.port)
