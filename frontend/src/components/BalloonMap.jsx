@@ -1,6 +1,6 @@
 // src/components/BalloonMap.jsx
 import React, { useState } from "react";
-import { MapContainer, TileLayer, CircleMarker, Circle, Polyline } from "react-leaflet";
+import { MapContainer, TileLayer, CircleMarker, Circle, Polyline, Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { getColor, API_URL } from "../utils/constants.js";
 
@@ -153,17 +153,34 @@ export default function BalloonMap({ allPoints = [], polylines = [] }) {
       {/* Points and clickable areas */}
       {allPoints.map((p, i) => (
         <React.Fragment key={i}>
+          {/* Visible point */}
           <CircleMarker
             center={[p.latitude, p.longitude]}
             radius={2}
             pathOptions={{ color: getColor(p.hour_ago) }}
           />
+          
+          {/* Invisible interaction radius */}
           <Circle
             center={[p.latitude, p.longitude]}
             radius={15000}
             pathOptions={{ opacity: 0, fillOpacity: 0 }}
             eventHandlers={{ click: () => handlePointClick(p) }}
-          />
+          >
+            <Tooltip
+              direction="top"
+              offset={[0, -4]}
+              opacity={0.9}
+              sticky
+            >
+              <div style={{ fontSize: "12px", lineHeight: "1.4" }}>
+                <div><strong>{p.hour_ago}h ago</strong></div>
+                <div>Latitude: {p.latitude.toFixed(4)}</div>
+                <div>Longitude: {p.longitude.toFixed(4)}</div>
+                <div>Altitude: {p.altitude_km.toFixed(4)} km</div>
+              </div>
+            </Tooltip>
+          </Circle>
         </React.Fragment>
       ))}
 
