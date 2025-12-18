@@ -10,5 +10,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :balloons
+    get "windy/forecast", to: "windy#forecast"
   end
 end
