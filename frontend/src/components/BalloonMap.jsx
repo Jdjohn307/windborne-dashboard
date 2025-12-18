@@ -51,21 +51,77 @@ export default function BalloonMap({ allPoints = [], polylines = [] }) {
     return path;
   }
 
-  // Handle click on a balloon point to fetch and display predicted path
+  // Find the end point of the track containing the clicked point
+  function getTrackEndPoint(clickedPoint, polylines) {
+    if (!polylines || polylines.length === 0) return clickedPoint;
+
+    // Build tracks from polylines
+    const tracks = [];
+    const trackMap = new Map(); // map from point identifier to track index
+
+    polylines.forEach(segment => {
+      const [p1, p2] = segment;
+      const key1 = `${p1.latitude}-${p1.longitude}-${p1.hour_ago}`;
+      const key2 = `${p2.latitude}-${p2.longitude}-${p2.hour_ago}`;
+
+      let trackIdx1 = trackMap.get(key1);
+      let trackIdx2 = trackMap.get(key2);
+
+      if (trackIdx1 !== undefined && trackIdx2 !== undefined && trackIdx1 !== trackIdx2) {
+        // merge tracks
+        tracks[trackIdx1] = [...tracks[trackIdx1], ...tracks[trackIdx2]];
+        tracks[trackIdx2] = [];
+        trackMap.set(key2, trackIdx1);
+      } else if (trackIdx1 !== undefined) {
+        tracks[trackIdx1].push(p2);
+        trackMap.set(key2, trackIdx1);
+      } else if (trackIdx2 !== undefined) {
+        tracks[trackIdx2].unshift(p1);
+        trackMap.set(key1, trackIdx2);
+      } else {
+        // new track
+        const newIdx = tracks.length;
+        tracks.push([p1, p2]);
+        trackMap.set(key1, newIdx);
+        trackMap.set(key2, newIdx);
+      }
+    });
+
+    // Find the track containing the clicked point
+    const clickedKey = `${clickedPoint.latitude}-${clickedPoint.longitude}-${clickedPoint.hour_ago}`;
+    const trackIdx = trackMap.get(clickedKey);
+
+    if (trackIdx !== undefined) {
+      const track = tracks[trackIdx].filter(p => p); // remove empty slots from merges
+      // Return the last point in the track
+      return track[0];
+    }
+
+    // fallback if not found
+    return clickedPoint;
+  }
+
+  // Handle click on a balloon point to fetch and display predicted path for most recent position
   const handlePointClick = async (point) => {
     try {
+      // Get the first point in this point's track (the newest)
+      const startPoint = getTrackEndPoint(point, polylines);
+
       console.log(`Fetching windy forecast data`);
-      const res = await fetch(`${API_URL}/api/windy/forecast?lat=${point.latitude}&lon=${point.longitude}`);
+      const res = await fetch(`${API_URL}/api/windy/forecast?lat=${startPoint.latitude}&lon=${startPoint.longitude}`);
       console.log(`Fetched windy forecast data`);
+
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const json = await res.json();
 
-      const path = simulateBalloonPath(point, json.data);
+      const path = simulateBalloonPath(startPoint, json.data);
       setPredictedPaths([path]);
     } catch (err) {
       console.error("Windy forecast fetch failed:", err);
     }
   };
+
+
 
   // Adjust polyline segment positions to handle date line crossings on the edge of the map
   const getSafePositions = (segment) => {
