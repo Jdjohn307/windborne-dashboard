@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { MapContainer, TileLayer, CircleMarker, Circle, Polyline } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { getColor } from "../utils/constants.js";
+import { getColor, API_URL } from "../utils/constants.js";
 
 // Main map component displaying balloon positions and tracks
 export default function BalloonMap({ allPoints = [], polylines = [] }) {
@@ -54,7 +54,7 @@ export default function BalloonMap({ allPoints = [], polylines = [] }) {
   // Handle click on a balloon point to fetch and display predicted path
   const handlePointClick = async (point) => {
     try {
-      const res = await fetch(`/api/windy/forecast?lat=${point.latitude}&lon=${point.longitude}`);
+      const res = await fetch(`${API_URL}/api/windy/forecast?lat=${point.latitude}&lon=${point.longitude}`);
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const json = await res.json();
 

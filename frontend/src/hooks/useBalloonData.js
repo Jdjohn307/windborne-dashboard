@@ -1,6 +1,7 @@
 // frontend/src/hooks/useBalloonData.js
 import { useEffect, useState } from "react";
 import mockData from "../mock/balloons.json";
+import { API_URL } from "../utils/config.js";
 
 // Custom hook to fetch balloon data from the API
 export function useBalloonData() {
@@ -13,7 +14,7 @@ export function useBalloonData() {
       console.log("Using mock balloon data");
       setData(mockData);
     } else {
-      fetch("http://localhost:3000/api/balloons")
+      fetch(`${API_URL}/api/balloons`)
         .then(res => {
           if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
           return res.json();
