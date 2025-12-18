@@ -5,7 +5,6 @@ export const HOURS_TOTAL = 23;              // total hours of data from windborn
 export const MAX_SPEED_RATIO = 3.0;         // max speed ratio for linking points
 export const MAX_TURN_ANGLE_DEG = 20;       // max turn angle for linking points
 
-// frontend/src/utils/config.js
 export const API_URL = import.meta.env.PROD ? 'https://windborne-dashboard-4anl.onrender.com' : 'http://localhost:3000';
 
 // Gradient from red (recent) to blue (old)

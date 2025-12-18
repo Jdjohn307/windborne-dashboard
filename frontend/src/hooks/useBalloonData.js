@@ -1,7 +1,7 @@
 // frontend/src/hooks/useBalloonData.js
 import { useEffect, useState } from "react";
 import mockData from "../mock/balloons.json";
-import { API_URL } from "../utils/config.js";
+import { API_URL } from "../utils/constants.js";
 
 // Custom hook to fetch balloon data from the API
 export function useBalloonData() {
