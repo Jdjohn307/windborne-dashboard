@@ -54,7 +54,9 @@ export default function BalloonMap({ allPoints = [], polylines = [] }) {
   // Handle click on a balloon point to fetch and display predicted path
   const handlePointClick = async (point) => {
     try {
+      console.log(`Fetching windy forecast data`);
       const res = await fetch(`${API_URL}/api/windy/forecast?lat=${point.latitude}&lon=${point.longitude}`);
+      console.log(`Fetched windy forecast data`);
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const json = await res.json();
 

@@ -14,8 +14,10 @@ export function useBalloonData() {
       console.log("Using mock balloon data");
       setData(mockData);
     } else {
+      console.log("Fetching balloon data from API");
       fetch(`${API_URL}/api/balloons`)
         .then(res => {
+          console.log("Fetched balloon data from API");
           if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
           return res.json();
         })
