@@ -146,10 +146,14 @@ export default function BalloonMap({ allPoints = [], polylines = [] }) {
             <div className="legend-section legend-disclaimer">
               <strong>Disclaimer</strong>
               <div className="legend-note">
-                Predicted paths use sample wind data from Windy’s free API tier.  
+                - Predicted paths use sample wind data from Windy’s free API tier.  
                 This data is not live and does not reflect real balloon trajectories.
                 Thus the predicted paths are for demonstration purposes only and will likely
                 not match actual balloon movements.
+              </div>
+              <div className="legend-note">
+                - API requests may be slow on the first interaction. This app runs on
+                Render’s free tier, which can cold start the Rails server after inactivity.
               </div>
             </div>
           </div>
