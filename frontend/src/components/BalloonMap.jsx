@@ -101,6 +101,64 @@ export default function BalloonMap({ allPoints = [], polylines = [] }) {
     return clickedPoint;
   }
 
+  // Map legend component
+  function MapLegend() {
+    const [open, setOpen] = useState(false);
+
+    return (
+      <div className={`map-legend ${open ? "open" : "collapsed"}`}>
+        <div className="legend-header" onClick={() => setOpen(!open)} >
+          <span>Map Guide</span>
+          <span className="legend-toggle">{open ? "▾" : "▸"}</span>
+        </div>
+
+        {open && (
+          <div className="legend-content">
+            <div className="legend-section">
+              <div className="legend-subtitle">Observed Balloons</div>
+              {[0, 6, 12, 24].map((h) => (
+                <div key={h} className="legend-row">
+                  <span
+                    className="legend-color"
+                    style={{ backgroundColor: getColor(h) }}
+                  />
+                  <span>{h}h ago</span>
+                </div>
+              ))}
+              <div className="legend-note">
+                - Each dot represents a balloon's position<br />  
+                - Color indicates how old the observation is <br />
+                - Hover over a dot for details
+              </div>
+            </div>
+
+            <div className="legend-section">
+              <div className="legend-subtitle">Predicted Path</div>
+              <div className="legend-row">
+                <span className="legend-line legend-line--predicted" />
+                <span>Estimated future movement</span>
+              </div>
+              <div className="legend-note">
+                - Click any balloon position to simulate where it may drift next
+              </div>
+            </div>
+
+            <div className="legend-section legend-disclaimer">
+              <strong>Disclaimer</strong>
+              <div className="legend-note">
+                Predicted paths use sample wind data from Windy’s free API tier.  
+                This data is not live and does not reflect real balloon trajectories.
+                Thus the predicted paths are for demonstration purposes only and will likely
+                not match actual balloon movements.
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+
   // Handle click on a balloon point to fetch and display predicted path for most recent position
   const handlePointClick = async (point) => {
     try {
@@ -144,6 +202,8 @@ export default function BalloonMap({ allPoints = [], polylines = [] }) {
   // Render the map with points, polylines, and predicted paths
   return (
     <MapContainer center={[20, 0]} zoom={2} style={{ height: "100%", width: "100%" }}>
+      <MapLegend />
+
       <TileLayer
         attribution="© OpenStreetMap"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -159,7 +219,7 @@ export default function BalloonMap({ allPoints = [], polylines = [] }) {
             radius={2}
             pathOptions={{ color: getColor(p.hour_ago) }}
           />
-          
+
           {/* Invisible interaction radius */}
           <Circle
             center={[p.latitude, p.longitude]}

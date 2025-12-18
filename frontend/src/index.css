@@ -10,6 +10,101 @@ html, body, #root {
   width: 100%;
 }
 
+.map-legend {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  max-width: 240px;     
+  white-space: normal;
+  padding: 8px 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  font-size: 12px;
+  pointer-events: auto;
+  color: #222;
+}
+
+.legend-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-row:last-child {
+  margin-bottom: 0;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.legend-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  cursor: pointer;
+  font-weight: 600;
+
+  padding: 6px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.map-legend.collapsed .legend-header {
+  border-bottom: none;
+}
+
+.legend-toggle {
+  font-size: 14px;
+}
+
+.legend-content {
+  padding: 8px 10px;
+}
+
+.legend-section {
+  margin-top: 6px;
+}
+
+.legend-subtitle {
+  font-weight: 500;
+  margin-bottom: 2px;
+  font-size: 12px;
+}
+
+.legend-note {
+  font-size: 11px;
+  margin-top: 2px;
+  line-height: 1.25;
+}
+
+.legend-line {
+  width: 18px;
+  height: 0;
+  border-top: 2px dashed orange;
+  display: inline-block;
+  margin-right: 6px;
+  transform: translateY(6px);
+}
+
+.legend-disclaimer {
+  border-top: 1px solid #ddd;
+  margin-top: 6px;
+  padding-top: 4px;
+}
+
+
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
