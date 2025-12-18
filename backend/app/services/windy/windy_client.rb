@@ -39,7 +39,7 @@ module Windy
         model: model,
         parameters: parameters,
         levels: levels,
-        key: ENV.fetch("WINDY_API_KEY")
+        key: ENV.fetch("WINDY_API_KEY", nil)
       }
 
       http = Net::HTTP.new(ENDPOINT.host, ENDPOINT.port)
@@ -51,16 +51,26 @@ module Windy
       )
       request.body = body.to_json
 
-      response = http.request(request)
-
-      
+      begin
+        response = http.request(request)
+      rescue => e
+        Rails.logger.error("Windy HTTP request failed: #{e.message}")
+        raise
+      end
 
       unless response.is_a?(Net::HTTPSuccess)
+        Rails.logger.error("Windy API HTTP error: #{response.code} body=#{response.body}")
         raise "Windy API error: #{response.code} #{response.body}"
       end
 
-      JSON.parse(response.body)
+      begin
+        JSON.parse(response.body)
+      rescue JSON::ParserError => e
+        Rails.logger.error("Windy API JSON parse error: #{e.message} body=#{response.body}")
+        raise
+      end
     end
+
 
     def self.normalize(raw, lat:, lon:)
       raw["ts"].each_with_index.map do |ts, i|
