@@ -4,8 +4,6 @@ A web-based dashboard visualizing the positions and trajectories of Windborne Sy
 
 **Note**: The free Windy API provides randomized/sample data rather than real forecasts, so predicted paths are illustrative only and may not reflect actual wind conditions.
 
-This project was built as part of a coding challenge for a job application.
-
 ## Live Demo
 
 - Frontend: [https://jdjohn307.github.io/windborne-dashboard/](https://jdjohn307.github.io/windborne-dashboard/)
@@ -76,4 +74,5 @@ In production, the frontend uses the Render-hosted backend URL defined in consta
 
 Backend deployed to Render (free tier)
 Frontend deployed to GitHub Pages
+
 Update API_URL in frontend/src/utils/constants.js for production
